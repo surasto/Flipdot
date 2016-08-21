@@ -30,7 +30,13 @@ unsigned char frameBuffer[X_SIZE][Y_SIZE];
 // color = YELLOW  all pixels set to yellow
 //====================================================
 void clearAll(int color) {
-  
+   int i,j;
+
+   for (i=0; i<X_SIZE; i++) 
+     for (j=0; j<Y_SIZE; j++) {
+       setFrameBuffer(i,j,color);
+       //pixel(i,j,color);
+     }
 }
 
 //=====================================================
@@ -42,8 +48,27 @@ void clearAll(int color) {
 // color = YELLOW  all pixels set to yellow
 //====================================================
 void quickClear(int color) {
+   int i,j;
+   int old;
 
+   for (i=0; i<X_SIZE; i++) 
+     for (j=0; j<Y_SIZE; j++) {
+       old = getFrameBuffer(i,j);
+       setFrameBuffer(i,j,color);
+       //if (old!=color) pixel(i,j,color);   // Write to Hardware only if changed
+     }
 }
+
+//====================================================
+// Draws a horizotal line at column Y
+// color = BLACK   all pixels set to black
+// color = YELLOW  all pixels set to yellow
+//====================================================
+void hLine(int y, int color) {
+  int i;
+  for (i=0; i<X_SIZE; i++) setFrameBuffer(i, y, color);
+}
+
 
 //============================================
 // printString(int xOffs, int yOffs, int color, int size char s) 
@@ -74,19 +99,6 @@ int printString(int xOffs, int yOffs, int color, int size, const char *s) {
 
 //###################### Internal Functions ##########################################
 
-//===========================================
-// clearFrameBuffer(int color)
-// Sets all bits to 
-//     Yellow if color = ON
-//     Black if color  = OFF
-//=========================================== 
-void clearFrameBuffer(int color) {
-	int x,y;
-    for (x=0; x<X_SIZE; x++)
-       for (y=0; y<Y_SIZE; y++) {
-		   if (color == ON) frameBuffer[x][y]=0xFF; else frameBuffer[x][y]=0x00;
-	   }
-} 
 
 //===========================================
 // setFrameBuffer(int x, int y, int value)
@@ -96,19 +108,37 @@ void clearFrameBuffer(int color) {
 void setFrameBuffer(int x, int y, int value) {
     unsigned char w, wNot;
     int yByteNo, yBitNo;
-    
+
     w=1;
     if ((y < 8 * Y_SIZE)&&(x < X_SIZE)&&(x>=0)&&(y>=0)) {
 		yByteNo = y/8;    // integer division to select the byte
-		yBitNo = y%8;     // module division (residual) to select the bit in that byte
+		yBitNo = y%8;     // modulo division (residual) to select the bit in that byte
     	w = w<<yBitNo;
     	if (value == ON) { 
 	       frameBuffer[x][yByteNo] = frameBuffer[x][yByteNo]|w;  // Logical OR adds one bit to the existing byte
 	    } else {
-		   wNot = 0xFF - w;	
+   		   wNot = 0xFF - w;	
 	       frameBuffer[x][yByteNo] = frameBuffer[x][yByteNo]&wNot;  // Logical AND set one bit to zero in the existing byte
-	    }
+ 	    }
 	}
+}
+
+//===========================================
+// int getFrameBuffer(int x, int y)
+// Gets color of one Pixel at x,y-Position
+// Value can be BLACK or YELLOW
+//=========================================== 
+int getFrameBuffer(int x, int y) {
+    unsigned char w, wNot;
+    int yByteNo, yBitNo;
+
+    w=1;
+    if ((y < 8 * Y_SIZE)&&(x < X_SIZE)&&(x>=0)&&(y>=0)) {
+    yByteNo = y/8;    // integer division to select the byte
+    yBitNo = y%8;     // modulo division (residual) to select the bit in that byte
+    w = w<<yBitNo;
+    if (frameBuffer[x][yByteNo]&w > 0) return(1); else return(0);
+  }
 }
 
 
@@ -127,26 +157,26 @@ int printChar6x8(int xOffs, int yOffs, int color, unsigned char c) {
 	unsigned char x,y,w;
 	
 	for (y=0; y<8; y++) {   
-		w=font6x8[c][y];
-        for (x=0; x<8; x++) {   
-			if (w&1) setFrameBuffer(x+xOffs,y+yOffs,color);
-            w=w>>1;
-        } 
-    }
-    return(xOffs+7);
+		w=pgm_read_byte(&(font6x8[c][y]));    // Important: pgm_read_byte reads from the array in the flash memory
+    for (x=0; x<8; x++) {   
+		if (w&1) setFrameBuffer(x+xOffs,y+yOffs,color);
+       w=w>>1;
+    } 
+  }
+  return(xOffs+7);
 }
 
 int printChar8x8(int xOffs, int yOffs, int color, unsigned char c) {
 	unsigned char x,y,w;
 	
 	for (y=0; y<8; y++) {   
-		w=font8x8[c][y];
-        for (x=0; x<8; x++) {   
-			if (w&1) setFrameBuffer(x+xOffs,y+yOffs,color);
-            w=w>>1;
-        } 
-    }
-    return(xOffs+8);
+		w=pgm_read_byte(&(font8x8[c][y]));   // Important: pgm_read_byte reads from the array in the flash memory
+    for (x=0; x<8; x++) {   
+ 			if (w&1) setFrameBuffer(x+xOffs,y+yOffs,color);
+      w=w>>1;
+    } 
+  }
+  return(xOffs+8);
 }
 
 
@@ -154,13 +184,13 @@ int printChar8x12(int xOffs, int yOffs, int color, unsigned char c) {
 	unsigned int x,y,w;
 	
 	for (y=0; y<12; y++) {   
-		w=font8x12[c][y];
-        for (x=0; x<12; x++) {   
+		w=pgm_read_byte(&(font8x12[c][y]));   // Important: pgm_read_byte reads from the array in the flash memory
+    for (x=0; x<12; x++) {   
 			if (w&1) setFrameBuffer(x+xOffs,y+yOffs,color);
-            w=w>>1;
-        } 
-    }
-    return(xOffs+9);
+      w=w>>1;
+    } 
+  }
+  return(xOffs+9);
 }
 
 
@@ -189,5 +219,14 @@ void printFrameBuffer() {
     }
 }
 
-	
+//===========================================
+// DEBUG ONLY
+// This is to check if reading from Flash 
+// memory works
+// Using: pgm_read_byte
+//===========================================
+void printFont() {
+  int i;
 
+  for (i=0; i<256; i++) Serial.println(pgm_read_byte(&(font6x8[i][0])) );
+}

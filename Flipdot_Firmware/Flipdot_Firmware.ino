@@ -7,7 +7,7 @@
 // they can be easily created by scripts
 //
 // Command format
-//   <Command>,<Color>,<x>,<y>,<....string....>\
+//   <Command>,<Color>,<x>,<y>,<....string....>\n
 //
 //   Commands:
 //     C  Clear Screen
@@ -25,8 +25,8 @@
 //     Only Y is required for the horizontal line command "H"
 //   String:
 //     Contains the characters to be printed 
-//   "\": 
-//     The command lines is terminated by the "\" character
+//   "\n": 
+//     The command lines is terminated by the return character
 //     It gets evaluated after reception of that character
 //             
 ////////////////////////////////////////////////////////////////////////////
@@ -35,8 +35,7 @@
 
 int i,j;
 int inByte;
-int commandLine[100];
-int commandLength=0;
+String commandLine;
 
 void setup() {
   
@@ -46,56 +45,64 @@ void setup() {
 }
 
 void loop() {
-  int c, color;
-  int cmd, cmdPtr;
+  char c;
+  int color;
+  unsigned char cmd;
+  int cmdPtr;
   int xVal, yVal;
+
   String xStr,yStr;
   String outputString;
   
   if (Serial.available() > 0) {
     c = Serial.read();
-    if (commandLength<100) commandLine[commandLength++] = c;
+    if (commandLine.length()<100) {
+      commandLine += c;
+    }
     else {
-      commandLength = 0;
+      commandLine = "";
       Serial.print("?");
     }
-    
+
     // ==== If command string is complete... =======
     if (c=='\\') {
-      cmd = commandLine[0];
-      if (commandLine[2] == 'B') color = 0; else color = 1;
+
+      cmd = commandLine.charAt(0);
+      if (commandLine.charAt(2) == 'B') color = 0; else color = 1;
       cmdPtr=4;
       xStr = ""; yStr = "";
-      while ((cmdPtr<=commandLength) && (commandLine[cmdPtr]!=',')) {
-        xStr +=  (char)commandLine[cmdPtr];
+      while ((cmdPtr<commandLine.length()) && (commandLine.charAt(cmdPtr)!=',')) {
+        xStr +=  (char)commandLine.charAt(cmdPtr);
         cmdPtr++;
         xVal = xStr.toInt();
       }
       cmdPtr++;
-      while ((cmdPtr<=commandLength) && (commandLine[cmdPtr]!=',')) {
-        yStr += (char)commandLine[cmdPtr];
+      while ((cmdPtr<commandLine.length()) && (commandLine.charAt(cmdPtr)!=',')) {
+        yStr += (char)commandLine.charAt(cmdPtr);
         cmdPtr++;
         yVal = yStr.toInt();
       }
       cmdPtr++;
-      while (cmdPtr<=commandLength) {
-        outputString += (char)commandLine[cmdPtr];
+      while (cmdPtr<commandLine.length()-1) {
+        outputString += (char)commandLine.charAt(cmdPtr);
         cmdPtr++;
       }
-    }
-    commandLength = 0;    // Reset command mode
-
-    // ======= Debug only ===========
-    Serial.println(cmd);
-    Serial.println(color);
-    Serial.println(xVal);
-    Serial.println(yVal);
-    Serial.println(outputString);
     
-    // ======= Execute the respective command ========
-    switch (cmd) {
-      case 'C':  clearAll(color); break;
-      case 'Q':  quickClear(color); break;
+      commandLine = "";    // Reset command mode
+
+      // ======= Debug only ===========
+      //Serial.println((char)cmd);
+      //Serial.println(color);
+      //Serial.println(xVal);
+      //Serial.println(yVal);
+      //Serial.println(outputString);
+    
+      // ======= Execute the respective command ========
+      switch (cmd) {
+        case 'C':  clearAll(color); break;
+        case 'Q':  quickClear(color); break;
+        case 'T':  printTest(yVal); break;
+      }
     }
   }
 }
@@ -138,12 +145,14 @@ void panelTest() {
 //===================================
 // For debugging and testing only
 //===================================
-void printTest() {   
+void printTest(int y) {   
   int i,j;
       
-    clearFrameBuffer(OFF);
-    i = printString(2,1,YELLOW,SMALL,"Test mit Space ! & $");
-    i = printString(2,15,YELLOW,LARGE,"Noch ein Test \x81");
+    clearAll(OFF);
+//    printFont();
+    hLine(y,1);
+    i = printString(2,1,BLACK,MEDIUM,"Here is a short Text String !");
+//    i = printString(2,15,YELLOW,LARGE,"Noch ein Test \x81");
  //   i = printString(2,18,ON,"Passt das noch ?");
 //    i=printChar(10,2,ON,'A');
     printFrameBuffer();
