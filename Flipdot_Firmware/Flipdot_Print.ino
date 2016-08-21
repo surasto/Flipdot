@@ -1,11 +1,9 @@
 /////////////////////////////////////////////////////////////////
 //  Testenvironment and base for displaying Fonts on the 
-//  Flipdot display. Here the content of the display is printed
-//  to stdout.
+//  Flipdot display. 
 //  CC-BY SA NC 2016 c-hack.de    ralf@surasto.de
 /////////////////////////////////////////////////////////////////
 
-#include <stdio.h>
 #include "font6x8.h"
 #include "font8x8.h"
 #include "font8x12.h"
@@ -27,8 +25,7 @@ unsigned char frameBuffer[X_SIZE][Y_SIZE];
 
 // bufferTouched records changes of the Framebuffer
 // This way only changed pixels have to be physically flipped
-unsigned char bufferTouched[X_SIZE][Y_SIZE];    
- 
+unsigned char bufferTouched[X_SIZE][Y_SIZE];  
 
 //===========================================
 // clearFrameBuffer(int color)
@@ -50,11 +47,11 @@ void clearFrameBuffer(int color) {
 // Sets all bits to changed
 //=========================================== 
 void touchBuffer() {
-	int x,y;
+  int x,y;
     for (x=0; x<X_SIZE; x++)
        for (y=0; y<Y_SIZE; y++) {
-		   bufferTouched[x][y]=0xFF;    // All bits got touched
-	   }
+       bufferTouched[x][y]=0xFF;    // All bits got touched
+     }
 } 
 
 //===========================================
@@ -62,13 +59,12 @@ void touchBuffer() {
 // Sets all bits to changed
 //=========================================== 
 void untouchBuffer() {
-	int x,y;
+  int x,y;
     for (x=0; x<X_SIZE; x++)
        for (y=0; y<Y_SIZE; y++) {
-		   bufferTouched[x][y]=0x00;    // All bits are set to untouched
-	   }
-} 
-
+       bufferTouched[x][y]=0x00;    // All bits are set to untouched
+     }
+}
 
 //===========================================
 // setFrameBuffer(int x, int y, int value)
@@ -97,7 +93,10 @@ void setFrameBuffer(int x, int y, int value) {
 
 
 //============================================
+// printChar6x8(int xOffs, int yOffs, char c) 
 // printChar8x8(int xOffs, int yOffs, char c) 
+// printChar8x12(int xOffs, int yOffs, char c) 
+//
 // xOffs = position of the left side of the character
 // yOffs = position of the top of the character
 // color = ON means yellow, OFF means black
@@ -187,34 +186,13 @@ void printFrameBuffer() {
 	   } 
 	   for (bitNo=0; bitNo<maxBits; bitNo++) {
 		   for (x=0; x<X_SIZE; x++) {
-			   if (frameBuffer[x][y] & w) printf("#"); else printf(".");
+			   if (frameBuffer[x][y] & w) Serial.print("#"); else Serial.print(".");
 		   }  
 		   w = w<<1; 
-		   printf("\n");
+		   Serial.println("");
 	   }
     }
 }
-
-//============================================
-// DEBUG ONLY
-// printBufferTouched is only used to see the 
-// content on the screen for debug
-//============================================
-void printBufferTouched() {
-	int x,y,bitNo;
-	unsigned char w;
-	
-    for (y=0; y<Y_SIZE; y++) {
-	   w = 1;   // Highest bit set
-	   for (bitNo=0; bitNo<8; bitNo++) {
-		   for (x=0; x<X_SIZE; x++) {
-			   if (bufferTouched[x][y] & w) printf("C"); else printf(".");
-		   }  
-		   w = w<<1; 
-		   printf("\n");
-	   }
-    }
-}		
 
 	
 //############################# Main ###############################	

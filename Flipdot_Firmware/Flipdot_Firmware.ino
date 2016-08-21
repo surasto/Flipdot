@@ -1,6 +1,6 @@
 ////////////////////////////////////////////////////////////////////////////
 // Flipdot_Firmware
-// CC-BY-SA-NC    8/2016 C-Hack (Ralf Stoffels)
+// CC-BY-SA-NC    8/2016 C-Hack (Ralf@Surasto.de)
 //
 // Hauptprogramm für Arduino
 // Arduino wartet auf Befehle über die serielle Schnittstelle und steuert 
@@ -13,9 +13,11 @@
 //    <Byte 5...n>            Textstring  (Ende mit 0x00)
 //
 //    Befehle:
-//      0x01   Print String
-//      0x03   Clear Screen Yellow
-//      0x04   Clear Screen Black
+//      0x01   Print String SMALL
+//      0x02   Print String MEDIUM
+//      0x03   Print String LARGE
+//      0x04   Clear Screen Yellow
+//      0x05   Clear Screen Black
 ////////////////////////////////////////////////////////////////////////////
 
 
@@ -27,6 +29,7 @@ int i,j;
 
 void setup() {
   
+  Serial.begin(9600);
   flipdotSetup();
 
 }

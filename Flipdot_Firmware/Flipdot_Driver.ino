@@ -1,9 +1,11 @@
 ///////////////// Flipdot Hack //////////////////////
 //   
-// Testsoftware zum dekodieren des Display busses
-// 6-Jul-2016
+// Driver for Brose-Flipdot Display
+// ATTENTION: DO NOT EXPERIMENT WITH THIS CODE 
+// WITHOUT MEASURING SIGNALS AT THE DISPLAY
+// #### DISPLAY CAN EASILY BY DESTROYED ######
 //
-// Pinbelegung:
+// Arduino Pins:
 //     Digital 0..5     Row#
 //     Digital 8        Row SET
 //     Digital 9        Row RESET
@@ -24,7 +26,6 @@
 
 void flipdotSetup() {
   
-    Serial.begin(9600);
     // Alle benötigten Pins auf Output
     for (int i=3; i<14; i++) pinMode(i, OUTPUT);
     pinMode(A0,OUTPUT);
@@ -46,6 +47,26 @@ void flipdotSetup() {
     i=0;
     j=0;
 }
+
+//===================================================
+// Set or Reset one Pixel
+// state = SET means yellow
+// state = RESET means black
+//===================================================
+void pixel(int x, int y, int state) {
+  int panelNr, colNr;
+  if ((x<169) && (x>=0) && (y>=0) && (y<29)) {
+      panelNr = x/28;   // integer division
+      colNr = x%28;     // modulo division
+      colSelect(colNr,state);
+      rowSelect(y,state);
+
+      writePanel(panelNr);
+  }
+}
+
+
+//####################### Internal functions ########################################
 
 
 //===================================================
@@ -90,7 +111,8 @@ void colSelect(int col, int state) {
 
 //===================================================
 // Diese Funktion steuert ein Panel an
-// Vermutlich darf sie dass nur ganz kurz tun ----- Muss ich noch cheeck 
+// Darf nur ganz kurz gepulst werden da sonst die 
+// Dioden zu heiß werden 
 // Parameter:  panel = 0...6 
 //             Gibt die Panelnummer an. 
 //===================================================
