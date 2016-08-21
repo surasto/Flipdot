@@ -19,10 +19,9 @@
 //     Analog 5         FP2800 D
 /////////////////////////////////////////////////////
 
-#define SET 1
-#define RESET 0
-#define OFF -1
+#include "Flipdot.h"
 
+//###################### Public Functions #############################################
 
 void flipdotSetup() {
   

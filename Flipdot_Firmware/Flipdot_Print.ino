@@ -14,18 +14,65 @@
 #define Y_PIXELS 28   // True Y-Size if the display
 #define OFF 0
 #define ON 1
-#define SMALL 0
-#define MEDIUM 1
-#define LARGE 2
 
 //================ global Variables ==========================
 // frameBuffer stores the content of the Flipdotmatrix
 // Each pixel is one bit (I.e only an eigth of storage is required 
 unsigned char frameBuffer[X_SIZE][Y_SIZE];    
 
-// bufferTouched records changes of the Framebuffer
-// This way only changed pixels have to be physically flipped
-unsigned char bufferTouched[X_SIZE][Y_SIZE];  
+
+//#################### Public Functions ####################################
+
+//====================================================
+// Clears the entire framebuffer and flips every pixel
+// of the display
+// color = BLACK   all pixels set to black
+// color = YELLOW  all pixels set to yellow
+//====================================================
+void clearAll(int color) {
+  
+}
+
+//=====================================================
+// Clears the entire framebuffer but only those pixels
+// get changed which have to be changed.
+// This can be much faster but requires that the 
+// frambuffer is really up to date
+// color = BLACK   all pixels set to black
+// color = YELLOW  all pixels set to yellow
+//====================================================
+void quickClear(int color) {
+
+}
+
+//============================================
+// printString(int xOffs, int yOffs, int color, int size char s) 
+// xOffs = position of the left side of the string
+// yOffs = position of the top of the string
+// color = ON means yellow, OFF means black
+// size = SMALL | MEDIUM | LARGE
+// s = string
+//============================================
+int printString(int xOffs, int yOffs, int color, int size, const char *s) {
+  int i,x,y;
+  
+  i=0;
+  x=xOffs;
+  y=yOffs;
+  while ((s[i] !='\0')&&(i<200)) {
+    switch(size) {
+      case SMALL: x = printChar6x8(x, y, color, s[i]); break;
+      case MEDIUM: x = printChar8x8(x, y, color, s[i]); break;
+      case LARGE: x = printChar8x12(x, y, color, s[i]); break;
+      default: x = printChar6x8(x, y, color, s[i]);
+      }
+    i++;
+  }
+  return(x);
+}
+
+
+//###################### Internal Functions ##########################################
 
 //===========================================
 // clearFrameBuffer(int color)
@@ -38,33 +85,8 @@ void clearFrameBuffer(int color) {
     for (x=0; x<X_SIZE; x++)
        for (y=0; y<Y_SIZE; y++) {
 		   if (color == ON) frameBuffer[x][y]=0xFF; else frameBuffer[x][y]=0x00;
-		   bufferTouched[x][y]=0xFF;    // All bits got touched
 	   }
 } 
-
-//===========================================
-// touchBuffer()
-// Sets all bits to changed
-//=========================================== 
-void touchBuffer() {
-  int x,y;
-    for (x=0; x<X_SIZE; x++)
-       for (y=0; y<Y_SIZE; y++) {
-       bufferTouched[x][y]=0xFF;    // All bits got touched
-     }
-} 
-
-//===========================================
-// untouchBuffer()
-// Sets all bits to changed
-//=========================================== 
-void untouchBuffer() {
-  int x,y;
-    for (x=0; x<X_SIZE; x++)
-       for (y=0; y<Y_SIZE; y++) {
-       bufferTouched[x][y]=0x00;    // All bits are set to untouched
-     }
-}
 
 //===========================================
 // setFrameBuffer(int x, int y, int value)
@@ -72,7 +94,7 @@ void untouchBuffer() {
 // value can be ON or OFF
 //=========================================== 
 void setFrameBuffer(int x, int y, int value) {
-    unsigned char w, wNot, oldByte;
+    unsigned char w, wNot;
     int yByteNo, yBitNo;
     
     w=1;
@@ -80,14 +102,12 @@ void setFrameBuffer(int x, int y, int value) {
 		yByteNo = y/8;    // integer division to select the byte
 		yBitNo = y%8;     // module division (residual) to select the bit in that byte
     	w = w<<yBitNo;
-    	oldByte = frameBuffer[x][yByteNo];
     	if (value == ON) { 
 	       frameBuffer[x][yByteNo] = frameBuffer[x][yByteNo]|w;  // Logical OR adds one bit to the existing byte
 	    } else {
 		   wNot = 0xFF - w;	
 	       frameBuffer[x][yByteNo] = frameBuffer[x][yByteNo]&wNot;  // Logical AND set one bit to zero in the existing byte
 	    }
-	    if (frameBuffer[x][yByteNo] != oldByte) bufferTouched[x][yByteNo] = bufferTouched[x][yByteNo]|w;   // mark bit as changed 
 	}
 }
 
@@ -145,31 +165,6 @@ int printChar8x12(int xOffs, int yOffs, int color, unsigned char c) {
 
 
 //============================================
-// printString(int xOffs, int yOffs, char s) 
-// xOffs = position of the left side of the string
-// yOffs = position of the top of the string
-// color = ON means yellow, OFF means black
-// s = string
-//============================================
-int printString(int xOffs, int yOffs, int color, int size, const char *s) {
-	int i,x,y;
-	
-	i=0;
-	x=xOffs;
-	y=yOffs;
-	while ((s[i] !='\0')&&(i<200)) {
-		switch(size) {
-		  case SMALL: x = printChar6x8(x, y, color, s[i]); break;
-		  case MEDIUM: x = printChar8x8(x, y, color, s[i]); break;
-		  case LARGE: x = printChar8x12(x, y, color, s[i]); break;
-		  default: x = printChar6x8(x, y, color, s[i]);
-	    }
-		i++;
-	}
-	return(x);
-}
-
-//============================================
 // DEBUG ONLY
 // printFrameBuffer is only used to see the 
 // content on the screen for debug
@@ -195,17 +190,4 @@ void printFrameBuffer() {
 }
 
 	
-//############################# Main ###############################	
-int main(int argc, char *argv[]) {   
-	int i,j;
-    	
-    clearFrameBuffer(OFF);
-    untouchBuffer();
-    i = printString(2,1,ON,SMALL,"Test mit Space ! & $");
-    i = printString(2,15,ON,LARGE,"Noch ein Test \x81");
- //   i = printString(2,18,ON,"Passt das noch ?");
-//    i=printChar(10,2,ON,'A');
-    printFrameBuffer();
-//    printBufferTouched();
-	
-}
+

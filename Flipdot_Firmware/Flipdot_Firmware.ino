@@ -16,6 +16,7 @@
 //     M  Print in medium Font
 //     L  Print in large Font
 //     H  Draw a horizontal line
+//     P  Set a pixel
 //   Color:
 //     B  Black
 //     Y  Yellow
@@ -30,10 +31,7 @@
 //             
 ////////////////////////////////////////////////////////////////////////////
 
-
-#define SET 1
-#define RESET 0
-#define OFF -1
+#include "Flipdot.h"
 
 int i,j;
 int inByte;
@@ -51,7 +49,7 @@ void loop() {
   int c, color;
   int cmd, cmdPtr;
   int xVal, yVal;
-  String x,y;
+  String xStr,yStr;
   String outputString;
   
   if (Serial.available() > 0) {
@@ -65,32 +63,39 @@ void loop() {
     // ==== If command string is complete... =======
     if (c=='\\') {
       cmd = commandLine[0];
-      color = commandLine[2];
+      if (commandLine[2] == 'B') color = 0; else color = 1;
       cmdPtr=4;
-      x="";
+      xStr = ""; yStr = "";
       while ((cmdPtr<=commandLength) && (commandLine[cmdPtr]!=',')) {
-        x = x + commandLine[cmdPtr];
+        xStr +=  (char)commandLine[cmdPtr];
         cmdPtr++;
-        xVal = atoi(x);
+        xVal = xStr.toInt();
       }
       cmdPtr++;
       while ((cmdPtr<=commandLength) && (commandLine[cmdPtr]!=',')) {
-        y = y + commandLine[cmdPtr];
+        yStr += (char)commandLine[cmdPtr];
         cmdPtr++;
-        yVal = atoi(y);
+        yVal = yStr.toInt();
       }
       cmdPtr++;
       while (cmdPtr<=commandLength) {
-        outputString = outputString + commandLine[cmdPtr];
+        outputString += (char)commandLine[cmdPtr];
         cmdPtr++;
       }
     }
+    commandLength = 0;    // Reset command mode
 
+    // ======= Debug only ===========
+    Serial.println(cmd);
+    Serial.println(color);
+    Serial.println(xVal);
+    Serial.println(yVal);
+    Serial.println(outputString);
+    
     // ======= Execute the respective command ========
     switch (cmd) {
-      case 'C':  break;
-      case 'Q':  break;
-      
+      case 'C':  clearAll(color); break;
+      case 'Q':  quickClear(color); break;
     }
   }
 }
@@ -99,7 +104,7 @@ void loop() {
 //===========================
 // For debugging only
 //===========================
-void testPanel() {
+void panelTest() {
   
    writePanel(-1);
    //delay(500);
@@ -130,3 +135,17 @@ void testPanel() {
   
 }
 
+//===================================
+// For debugging and testing only
+//===================================
+void printTest() {   
+  int i,j;
+      
+    clearFrameBuffer(OFF);
+    i = printString(2,1,YELLOW,SMALL,"Test mit Space ! & $");
+    i = printString(2,15,YELLOW,LARGE,"Noch ein Test \x81");
+ //   i = printString(2,18,ON,"Passt das noch ?");
+//    i=printChar(10,2,ON,'A');
+    printFrameBuffer();
+
+}
