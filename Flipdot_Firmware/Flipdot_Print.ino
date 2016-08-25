@@ -11,7 +11,7 @@
 //================== Constants ===============================
 #define X_SIZE 168    // 128 column
 #define Y_SIZE 4      // 28 rows (represented by 4 bytes)
-#define Y_PIXELS 28   // True Y-Size if the display
+#define Y_PIXELS 24   // True Y-Size if the display
 #define OFF 0
 #define ON 1
 
@@ -32,10 +32,12 @@ unsigned char frameBuffer[X_SIZE][Y_SIZE];
 void clearAll(int color) {
    int i,j;
 
-   for (i=0; i<X_SIZE; i++) 
-     for (j=0; j<Y_SIZE; j++) {
-       setFrameBuffer(i,j,color);
-       //pixel(i,j,color);
+j=5;
+   for (i=0; i<32; i++) {
+ //    for (j=0; j<32; j++) {
+    //   setFrameBuffer(i,j,color);
+       pixel(i,j,color);
+       delay(200);
      }
 }
 
@@ -60,13 +62,28 @@ void quickClear(int color) {
 }
 
 //====================================================
+// Sets a Pixel at row Y column X
+// color = BLACK   all pixels set to black
+// color = YELLOW  all pixels set to yellow
+//====================================================
+void setPixel(int x, int y, int color) {
+  
+   pixel(x,y,color);
+   
+}
+
+
+//====================================================
 // Draws a horizotal line at column Y
 // color = BLACK   all pixels set to black
 // color = YELLOW  all pixels set to yellow
 //====================================================
 void hLine(int y, int color) {
   int i;
-  for (i=0; i<X_SIZE; i++) setFrameBuffer(i, y, color);
+  for (i=0; i<X_SIZE; i++) {
+     setFrameBuffer(i, y, color);
+     pixel(i,y,color);
+  }
 }
 
 

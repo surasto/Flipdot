@@ -25,7 +25,7 @@
 //     Only Y is required for the horizontal line command "H"
 //   String:
 //     Contains the characters to be printed 
-//   "\n": 
+//   "\": 
 //     The command lines is terminated by the return character
 //     It gets evaluated after reception of that character
 //             
@@ -68,7 +68,7 @@ void loop() {
     if (c=='\\') {
 
       cmd = commandLine.charAt(0);
-      if (commandLine.charAt(2) == 'B') color = 0; else color = 1;
+      if (commandLine.charAt(2) == 'B') color = 1; else color = 0;
       cmdPtr=4;
       xStr = ""; yStr = "";
       while ((cmdPtr<commandLine.length()) && (commandLine.charAt(cmdPtr)!=',')) {
@@ -99,9 +99,11 @@ void loop() {
     
       // ======= Execute the respective command ========
       switch (cmd) {
-        case 'C':  clearAll(color); break;
+        case 'C':  clearAll(color); Serial.println("!"); break;
         case 'Q':  quickClear(color); break;
         case 'T':  printTest(yVal); break;
+        case 'P':  setPixel(xVal,yVal,color); break;
+        case 'H':  hLine(yVal,color); break;
       }
     }
   }

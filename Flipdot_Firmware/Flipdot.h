@@ -7,8 +7,8 @@
 #define RESET 0
 #define OFF -1
 
-#define YELLOW 0
-#define BLACK 1
+#define YELLOW 1
+#define BLACK 0
 
 #define SMALL 0
 #define MEDIUM 1

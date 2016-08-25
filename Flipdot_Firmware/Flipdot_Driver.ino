@@ -21,6 +21,8 @@
 
 #include "Flipdot.h"
 
+//const int rowtranslate[] = {
+
 //###################### Public Functions #############################################
 
 void flipdotSetup() {
@@ -54,7 +56,7 @@ void flipdotSetup() {
 //===================================================
 void pixel(int x, int y, int state) {
   int panelNr, colNr;
-  if ((x<169) && (x>=0) && (y>=0) && (y<29)) {
+  if ((x<169) && (x>=0) && (y>=0) && (y<32)) {
       panelNr = x/28;   // integer division
       colNr = x%28;     // modulo division
       colSelect(colNr,state);
@@ -123,7 +125,7 @@ void writePanel(int panel) {
     digitalWrite(12, panel & 4);
 
     digitalWrite(13, LOW);   // Kurzer Puls, der das Panel enabled
-    delay(5);
+    delay(10);
   } 
   digitalWrite(13, HIGH);  
 }

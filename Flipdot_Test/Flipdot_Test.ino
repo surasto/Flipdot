@@ -23,6 +23,38 @@
 int i=0;
 int j=0;
 
+// Wert Binär /Binär Zeile
+//        1
+//      21684 
+// 1    00001  11110  3,            
+// 2    00010  11101  6           , 
+// 3    00011  11100  10, 
+// 4    00100  11011  13, 
+// 5    00101  11019  17, 
+// 6    00110 ?
+// 7    00111 ?, 
+// 8    01000 ?, 
+// 9    01001  10110  4,             
+// 10   01010  10101  7,            
+// 11   01011  10100  11, 
+// 12   01100  10011  14
+// 13   01101  10010  17, 
+// 14   01110 ? 
+// 15   01111 ?, 
+// 16   10000  01111  1,            
+// 17   10001  01110  5,         
+// 18   10010  01101  8,           
+// 19   10011  01100  12, 
+// 20   10100  01011  15, 
+// 21   10101 ?, 
+// 22   10110 ?, 
+// 23   10111 ?,
+// 24   11000  00111  2,           3
+// 25   11001 ? 
+// 26   11010  00101  9, 
+// 27   11011 ?, 
+// 28   11100  00011  16, 
+//const int rowtranslate[] = {
 
 void setup() {
   
@@ -44,7 +76,7 @@ void setup() {
     digitalWrite(A3, HIGH);
     digitalWrite(A4, HIGH);
     digitalWrite(A5, HIGH);
-
+j=1;
 }
 
 void loop() {
@@ -53,28 +85,32 @@ void loop() {
    //delay(500);
 
 // ============== Alles Schwarz ============
-/*   colSelect(i,SET);
+/*  colSelect(i,SET);
    rowSelect(j,SET);
    writePanel(0);
 //   delay(10);
    colSelect(i,OFF);
    rowSelect(j,OFF);
 */
-
 // ========== Alles Gelb ==============
-   colSelect(i,RESET);
+colSelect(i,RESET);
    rowSelect(j,RESET);
    writePanel(0);
 //   delay(10);
    colSelect(i,OFF);
    rowSelect(j,OFF);
 
+
+j=31;
    i++;
    if (i>31) {
       i=0;
-      j++;
+      j=j+1;
    }
-   if (j>31) j=0;
+   if (j>31) {
+    j=0;
+   }
+  
   
 }
 
@@ -85,7 +121,7 @@ void loop() {
 //             state = RESET Pixel wird zurückgesetzt
 //===================================================
 void rowSelect(int row, int state) {
-  digitalWrite(3, row & 1);
+  digitalWrite(3, row & 1);   // gecheckt
   digitalWrite(4, row & 2);
   digitalWrite(5, row & 4);
   digitalWrite(6, row & 8);
@@ -132,7 +168,7 @@ void writePanel(int panel) {
     digitalWrite(12, panel & 4);
 
     digitalWrite(13, LOW);   // Kurzer Puls, der das Panel enabled
-    delay(5);
+    delay(10);
   } 
   digitalWrite(13, HIGH);  
 }
