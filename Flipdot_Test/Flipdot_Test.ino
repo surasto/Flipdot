@@ -23,37 +23,37 @@
 int i=0;
 int j=0;
 
-// Wert Binär /Binär Zeile
+// Wert Binär Resorted Zeile
 //        1
 //      21684 
-// 1    00001  11110  3,            
-// 2    00010  11101  6           , 
-// 3    00011  11100  10, 
-// 4    00100  11011  13, 
-// 5    00101  11019  17, 
+// 1    00001  OOIOO  3,            
+// 2    00010  OIOOO  6           , 
+// 3    00011  OIIOO  10, 
+// 4    00100  IOOOO  13, 
+// 5    00101  IOIOO  17, 
 // 6    00110 ?
 // 7    00111 ?, 
 // 8    01000 ?, 
-// 9    01001  10110  4,             
-// 10   01010  10101  7,            
-// 11   01011  10100  11, 
-// 12   01100  10011  14
-// 13   01101  10010  17, 
+// 9    01001  OOIOI  4,             
+// 10   01010  OIOOI  7,            
+// 11   01011  OIIOI  11, 
+// 12   01100  IOOOI  14
+// 13   01101  IOIOI  17, 
 // 14   01110 ? 
 // 15   01111 ?, 
-// 16   10000  01111  1,            
-// 17   10001  01110  5,         
-// 18   10010  01101  8,           
-// 19   10011  01100  12, 
-// 20   10100  01011  15, 
+// 16   10000  OOOIO  1,            
+// 17   10001  OOIIO  5,         
+// 18   10010  OIOIO  8,           
+// 19   10011  OIIIO  12, 
+// 20   10100  IOOIO  15, 
 // 21   10101 ?, 
 // 22   10110 ?, 
 // 23   10111 ?,
-// 24   11000  00111  2,           3
+// 24   11000  OOOII  2,           3
 // 25   11001 ? 
-// 26   11010  00101  9, 
+// 26   11010  OIOII  9, 
 // 27   11011 ?, 
-// 28   11100  00011  16, 
+// 28   11100  IOOII  16, 
 //const int rowtranslate[] = {
 
 void setup() {
@@ -121,11 +121,11 @@ j=31;
 //             state = RESET Pixel wird zurückgesetzt
 //===================================================
 void rowSelect(int row, int state) {
-  digitalWrite(3, row & 1);   // gecheckt
-  digitalWrite(4, row & 2);
-  digitalWrite(5, row & 4);
-  digitalWrite(6, row & 8);
-  digitalWrite(7, row & 16);
+  digitalWrite(3, row & 4);  // was 1 
+  digitalWrite(4, row & 8);  // was 2
+  digitalWrite(5, row & 16); // was 4
+  digitalWrite(6, row & 1);  // was 8
+  digitalWrite(7, row & 2);  // was 16
   if (state == SET) {
      digitalWrite(9, HIGH); // SET (immer zuerst nach HIGH)
      digitalWrite(8, LOW);  // Diese beiden Pins müssen immer komplementär sein - sonst raucht es
