@@ -85,29 +85,31 @@ void loop() {
    //delay(500);
 
 // ============== Alles Schwarz ============
-/*  colSelect(i,SET);
+  colSelect(i,SET);
    rowSelect(j,SET);
    writePanel(0);
 //   delay(10);
    colSelect(i,OFF);
    rowSelect(j,OFF);
-*/
+
 // ========== Alles Gelb ==============
-colSelect(i,RESET);
+/*colSelect(i,RESET);
    rowSelect(j,RESET);
    writePanel(0);
 //   delay(10);
    colSelect(i,OFF);
    rowSelect(j,OFF);
+*/
 
-
-j=31;
+//j=31;
    i++;
    if (i>31) {
       i=0;
+      delay(500);
+      Serial.println(j);
       j=j+1;
    }
-   if (j>31) {
+   if (j>28) {
     j=0;
    }
   

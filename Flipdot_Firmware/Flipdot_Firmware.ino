@@ -7,7 +7,7 @@
 // they can be easily created by scripts
 //
 // Command format
-//   <Command>,<Color>,<x>,<y>,<....string....>\n
+//   <Command>,<Color>,<x>,<y>,<size>,<....string....>\n
 //
 //   Commands:
 //     C  Clear Screen
@@ -23,6 +23,10 @@
 //   X,Y:
 //     Required for all Print commands
 //     Only Y is required for the horizontal line command "H"
+//   size:
+//     S SMALL
+//     M MEDIUM
+//     L LARGE
 //   String:
 //     Contains the characters to be printed 
 //   "\": 
@@ -50,6 +54,8 @@ void loop() {
   unsigned char cmd;
   int cmdPtr;
   int xVal, yVal;
+  char fontSize;
+  int fsize;
 
   String xStr,yStr;
   String outputString;
@@ -83,6 +89,11 @@ void loop() {
         yVal = yStr.toInt();
       }
       cmdPtr++;
+      fontSize = commandLine.charAt(cmdPtr);
+      if (fontSize == 'S') fsize = SMALL;
+      else if (fontSize == 'M') fsize = MEDIUM;
+      else fsize = LARGE;
+      cmdPtr+=2;
       while (cmdPtr<commandLine.length()-1) {
         outputString += (char)commandLine.charAt(cmdPtr);
         cmdPtr++;
@@ -91,19 +102,21 @@ void loop() {
       commandLine = "";    // Reset command mode
 
       // ======= Debug only ===========
-      //Serial.println((char)cmd);
-      //Serial.println(color);
-      //Serial.println(xVal);
-      //Serial.println(yVal);
-      //Serial.println(outputString);
+      Serial.println((char)cmd);
+      Serial.println(color);
+      Serial.println(xVal);
+      Serial.println(yVal);
+      Serial.println(fontSize);
+      Serial.println(outputString);
     
       // ======= Execute the respective command ========
       switch (cmd) {
         case 'C':  clearAll(color); Serial.println("!"); break;
         case 'Q':  quickClear(color); break;
         case 'T':  printTest(yVal); break;
-        case 'P':  setPixel(xVal,yVal,color); break;
+        case 'S':  setPixel(xVal,yVal,color); break;
         case 'H':  hLine(yVal,color); break;
+        case 'P':  printString(xVal, yVal, color, fontSize, "Test");
       }
     }
   }

@@ -32,13 +32,14 @@ unsigned char frameBuffer[X_SIZE][Y_SIZE];
 void clearAll(int color) {
    int i,j;
 
-j=5;
-   for (i=0; i<32; i++) {
- //    for (j=0; j<32; j++) {
-    //   setFrameBuffer(i,j,color);
+   for (i=0; i<X_SIZE; i++) {
+     Serial.println(i);
+     for (j=0; j<Y_PIXELS; j++) {
+       setFrameBuffer(i,j,color);
        pixel(i,j,color);
-       delay(200);
+ //      delay(100);     // Slow down for debug
      }
+   }
 }
 
 //=====================================================
@@ -54,10 +55,10 @@ void quickClear(int color) {
    int old;
 
    for (i=0; i<X_SIZE; i++) 
-     for (j=0; j<Y_SIZE; j++) {
+     for (j=0; j<Y_PIXELS; j++) {
        old = getFrameBuffer(i,j);
        setFrameBuffer(i,j,color);
-       //if (old!=color) pixel(i,j,color);   // Write to Hardware only if changed
+       if (old!=color) pixel(i,j,color);   // Write to Hardware only if changed
      }
 }
 
@@ -176,7 +177,10 @@ int printChar6x8(int xOffs, int yOffs, int color, unsigned char c) {
 	for (y=0; y<8; y++) {   
 		w=pgm_read_byte(&(font6x8[c][y]));    // Important: pgm_read_byte reads from the array in the flash memory
     for (x=0; x<8; x++) {   
-		if (w&1) setFrameBuffer(x+xOffs,y+yOffs,color);
+		if (w&1) {
+		  setFrameBuffer(x+xOffs,y+yOffs,color);
+      pixel(x+xOffs, y+yOffs, color);
+		}
        w=w>>1;
     } 
   }
@@ -189,7 +193,10 @@ int printChar8x8(int xOffs, int yOffs, int color, unsigned char c) {
 	for (y=0; y<8; y++) {   
 		w=pgm_read_byte(&(font8x8[c][y]));   // Important: pgm_read_byte reads from the array in the flash memory
     for (x=0; x<8; x++) {   
- 			if (w&1) setFrameBuffer(x+xOffs,y+yOffs,color);
+ 			if (w&1) {
+ 			  setFrameBuffer(x+xOffs,y+yOffs,color);
+        pixel(x+xOffs, y+yOffs, color);
+ 			}
       w=w>>1;
     } 
   }
@@ -203,7 +210,10 @@ int printChar8x12(int xOffs, int yOffs, int color, unsigned char c) {
 	for (y=0; y<12; y++) {   
 		w=pgm_read_byte(&(font8x12[c][y]));   // Important: pgm_read_byte reads from the array in the flash memory
     for (x=0; x<12; x++) {   
-			if (w&1) setFrameBuffer(x+xOffs,y+yOffs,color);
+			if (w&1) {
+			  setFrameBuffer(x+xOffs,y+yOffs,color);
+        pixel(x+xOffs, y+yOffs, color);
+			}
       w=w>>1;
     } 
   }

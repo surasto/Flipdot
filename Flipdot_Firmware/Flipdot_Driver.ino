@@ -21,8 +21,6 @@
 
 #include "Flipdot.h"
 
-//const int rowtranslate[] = {
-
 //###################### Public Functions #############################################
 
 void flipdotSetup() {
@@ -60,7 +58,7 @@ void pixel(int x, int y, int state) {
       panelNr = x/28;   // integer division
       colNr = x%28;     // modulo division
       colSelect(colNr,state);
-      rowSelect(y,state);
+      rowSelect(y+2,state);
 
       writePanel(panelNr);
   }
@@ -77,11 +75,11 @@ void pixel(int x, int y, int state) {
 //             state = RESET Pixel wird zurückgesetzt
 //===================================================
 void rowSelect(int row, int state) {
-  digitalWrite(3, row & 1);
-  digitalWrite(4, row & 2);
-  digitalWrite(5, row & 4);
-  digitalWrite(6, row & 8);
-  digitalWrite(7, row & 16);
+  digitalWrite(3, row & 4);   // Scrambled to make up for wiring
+  digitalWrite(4, row & 8);
+  digitalWrite(5, row & 16);
+  digitalWrite(6, row & 1);
+  digitalWrite(7, row & 2);
   if (state == SET) {
      digitalWrite(9, HIGH); // SET (immer zuerst nach HIGH)
      digitalWrite(8, LOW);  // Diese beiden Pins müssen immer komplementär sein - sonst raucht es
@@ -100,6 +98,11 @@ void rowSelect(int row, int state) {
 //             state = RESET Pixel wird zurückgesetzt
 //===================================================
 void colSelect(int col, int state) {
+  col++;
+  if (col>7)  col++;  // Somehow codes 7,16,24 have to be skipped
+  if (col>15) col++;
+  if (col>23) col++;
+
   digitalWrite(A0, col & 1);
   digitalWrite(A1, col & 2);
   digitalWrite(A2, col & 4);
