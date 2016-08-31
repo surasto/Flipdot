@@ -82,19 +82,23 @@ void loop() {
         cmdPtr++;
         xVal = xStr.toInt();
       }
+      
       cmdPtr++;
       while ((cmdPtr<commandLine.length()) && (commandLine.charAt(cmdPtr)!=',')) {
         yStr += (char)commandLine.charAt(cmdPtr);
         cmdPtr++;
         yVal = yStr.toInt();
       }
+      
       cmdPtr++;
       fontSize = commandLine.charAt(cmdPtr);
       if (fontSize == 'S') fsize = SMALL;
       else if (fontSize == 'M') fsize = MEDIUM;
       else fsize = LARGE;
+      
       cmdPtr+=2;
-      while (cmdPtr<commandLine.length()-1) {
+      outputString="";
+      while ((cmdPtr<commandLine.length()-1)&&(outputString.length()<100)) {
         outputString += (char)commandLine.charAt(cmdPtr);
         cmdPtr++;
       }
@@ -116,7 +120,7 @@ void loop() {
         case 'T':  printTest(yVal); break;
         case 'S':  setPixel(xVal,yVal,color); break;
         case 'H':  hLine(yVal,color); break;
-        case 'P':  printString(xVal, yVal, color, fontSize, "Test");
+        case 'P':  printString(xVal, yVal, color, fontSize, outputString);
       }
     }
   }

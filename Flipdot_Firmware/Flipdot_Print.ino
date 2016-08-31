@@ -96,19 +96,22 @@ void hLine(int y, int color) {
 // size = SMALL | MEDIUM | LARGE
 // s = string
 //============================================
-int printString(int xOffs, int yOffs, int color, int size, const char *s) {
+int printString(int xOffs, int yOffs, int color, int size, String s) {
   int i,x,y;
+  char c;
   
   i=0;
   x=xOffs;
   y=yOffs;
-  while ((s[i] !='\0')&&(i<200)) {
+
+  while ((i<s.length()) && (i<100)) {
     switch(size) {
-      case SMALL: x = printChar6x8(x, y, color, s[i]); break;
-      case MEDIUM: x = printChar8x8(x, y, color, s[i]); break;
-      case LARGE: x = printChar8x12(x, y, color, s[i]); break;
+      case SMALL: x = printChar6x8(x, y, color, s.charAt(i)); break;
+      case MEDIUM: x = printChar8x8(x, y, color, s.charAt(i)); break;
+      case LARGE: x = printChar8x12(x, y, color, s.charAt(i)); break;
       default: x = printChar6x8(x, y, color, s[i]);
-      }
+    }
+    //Serial.print(s.charAt(i));  
     i++;
   }
   return(x);
