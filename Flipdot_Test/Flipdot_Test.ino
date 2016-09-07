@@ -76,7 +76,8 @@ void setup() {
     digitalWrite(A3, HIGH);
     digitalWrite(A4, HIGH);
     digitalWrite(A5, HIGH);
-j=1;
+j=0;
+i=0;
 }
 
 void loop() {
@@ -85,35 +86,35 @@ void loop() {
    //delay(500);
 
 // ============== Alles Schwarz ============
-  colSelect(i,SET);
+/*  colSelect(i,SET);
    rowSelect(j,SET);
    writePanel(0);
 //   delay(10);
    colSelect(i,OFF);
    rowSelect(j,OFF);
-
+*/
 // ========== Alles Gelb ==============
-/*colSelect(i,RESET);
+   colSelect(i,RESET);
    rowSelect(j,RESET);
    writePanel(0);
 //   delay(10);
    colSelect(i,OFF);
    rowSelect(j,OFF);
-*/
 
-//j=31;
+
+//j=0;
    i++;
+
    if (i>31) {
       i=0;
-      delay(500);
+      delay(1000);
       Serial.println(j);
-      j=j+1;
+      j++;
    }
    if (j>28) {
-    j=0;
-   }
-  
-  
+     j=0;
+   }  
+
 }
 
 //===================================================
@@ -123,6 +124,10 @@ void loop() {
 //             state = RESET Pixel wird zurückgesetzt
 //===================================================
 void rowSelect(int row, int state) {
+  row++;
+  if (row>6) row++;
+  if (row>14) row++;
+  if (row>22) row++;
   digitalWrite(3, row & 4);  // was 1 
   digitalWrite(4, row & 8);  // was 2
   digitalWrite(5, row & 16); // was 4

@@ -58,7 +58,7 @@ void pixel(int x, int y, int state) {
       panelNr = x/28;   // integer division
       colNr = x%28;     // modulo division
       colSelect(colNr,state);
-      rowSelect(y+2,state);
+      rowSelect(y+1,state);
 
       writePanel(panelNr);
   }
@@ -75,6 +75,10 @@ void pixel(int x, int y, int state) {
 //             state = RESET Pixel wird zurückgesetzt
 //===================================================
 void rowSelect(int row, int state) {
+  row++;
+  if (row>6) row++;
+  if (row>14) row++;
+  if (row>22) row++;
   digitalWrite(3, row & 4);   // Scrambled to make up for wiring
   digitalWrite(4, row & 8);
   digitalWrite(5, row & 16);
