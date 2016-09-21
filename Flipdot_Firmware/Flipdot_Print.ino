@@ -104,6 +104,8 @@ int printString(int xOffs, int yOffs, int color, int size, String s) {
   x=xOffs;
   y=yOffs;
 
+  if (size==SMALL) x=xOffs-2;   // Somehow I need to shift the text to the left
+
   while ((i<s.length()) && (i<100)) {
     switch(size) {
       case SMALL: x = printChar6x8(x, y, color, s.charAt(i)); break;
@@ -187,7 +189,7 @@ int printChar6x8(int xOffs, int yOffs, int color, unsigned char c) {
        w=w>>1;
     } 
   }
-  return(xOffs+7);
+  return(xOffs+6);
 }
 
 int printChar8x8(int xOffs, int yOffs, int color, unsigned char c) {
@@ -220,7 +222,7 @@ int printChar8x12(int xOffs, int yOffs, int color, unsigned char c) {
       w=w>>1;
     } 
   }
-  return(xOffs+9);
+  return(xOffs+7);
 }
 
 

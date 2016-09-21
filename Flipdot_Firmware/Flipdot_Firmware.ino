@@ -12,11 +12,9 @@
 //   Commands:
 //     C  Clear Screen
 //     Q  Quick Clear (changes only those pixels which have to be flipped)
-//     S  Print in small font
-//     M  Print in medium Font
-//     L  Print in large Font
+//     P  Print
 //     H  Draw a horizontal line
-//     P  Set a pixel
+//     S  Set a pixel
 //   Color:
 //     B  Black
 //     Y  Yellow
@@ -120,7 +118,7 @@ void loop() {
         case 'T':  printTest(yVal); break;
         case 'S':  setPixel(xVal,yVal,color); break;
         case 'H':  hLine(yVal,color); break;
-        case 'P':  printString(xVal, yVal, color, fontSize, outputString);
+        case 'P':  printString(xVal, yVal, color, fsize, outputString);
       }
     }
   }
