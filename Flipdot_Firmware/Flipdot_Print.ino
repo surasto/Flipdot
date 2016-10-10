@@ -32,7 +32,8 @@ unsigned char frameBuffer[X_SIZE][Y_SIZE];
 void clearAll(int color) {
    int i,j;
 
-   for (i=0; i<X_SIZE; i++) {
+//   for (i=0; i<X_SIZE; i++) {
+   for (i=0; i<168; i++) {
      Serial.println(i);
      for (j=0; j<Y_PIXELS; j++) {
        setFrameBuffer(i,j,color);
@@ -81,9 +82,11 @@ void setPixel(int x, int y, int color) {
 //====================================================
 void hLine(int y, int color) {
   int i;
-  for (i=0; i<X_SIZE; i++) {
+//  for (i=0; i<X_SIZE; i++) {
+  for (i=0; i<168; i++) {
      setFrameBuffer(i, y, color);
      pixel(i,y,color);
+     //delay(200);
   }
 }
 
