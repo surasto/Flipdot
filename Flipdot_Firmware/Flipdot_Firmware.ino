@@ -14,13 +14,16 @@
 //     Q  Quick Clear (changes only those pixels which have to be flipped)
 //     P  Print
 //     H  Draw a horizontal line
+//     V  Draw a vertical line
 //     S  Set a pixel
+//     X  Train a regon of pixels (Color has no meaning, X=start column, Y=stop column);
 //   Color:
 //     B  Black
 //     Y  Yellow
 //   X,Y:
 //     Required for all Print commands
 //     Only Y is required for the horizontal line command "H"
+//     Only X is required for the vertical line command "V"
 //   size:
 //     S SMALL
 //     M MEDIUM
@@ -118,7 +121,9 @@ void loop() {
         case 'T':  printTest(yVal); break;
         case 'S':  setPixel(xVal,yVal,color); break;
         case 'H':  hLine(yVal,color); break;
-        case 'P':  printString(xVal, yVal, color, fsize, outputString);
+        case 'V':  vLine(xVal,color); break;
+        case 'P':  printString(xVal, yVal, color, fsize, outputString); break;
+        case 'X':  crossTrainer(xVal,yVal); 
       }
     }
   }

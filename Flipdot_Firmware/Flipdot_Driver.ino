@@ -132,7 +132,7 @@ void writePanel(int panel) {
     digitalWrite(12, panel & 4);
 
     digitalWrite(13, LOW);   // Kurzer Puls, der das Panel enabled
-    delay(10);
+    delay(20);
   } 
   digitalWrite(13, HIGH);  
 }

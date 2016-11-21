@@ -1,0 +1,30 @@
+<html>
+<head>
+
+<script language="javascript" type="text/javascript">
+function schreibe(form) {
+   var request = new XMLHttpRequest();
+
+   request.open("GET","writeArduino.php/?flipCommand="+form.flipText.value,false);
+   request.send();
+//   window.alert("Gesendet: "+form.flipText.value);
+}
+</script> 
+
+</head>
+<body>
+
+<h1>Flipdot-Controller</h1>
+
+<form name="Testformular" action="">
+    <label>Anzeigetext </label> <input type "text" id="flipText" name="flipText" value=""> 
+   
+    <button onclick="schreibe(this.form)" >schreiben</button>
+
+<p>
+    Es wird eine XMLHttpRequest geschickt der das php Program writeArduino dem Raspi aufruft.
+    Das php Programm schreibt dann auf /dev/ttyACM0 zum Arduino.
+</p>
+</form>
+</body>
+</html>

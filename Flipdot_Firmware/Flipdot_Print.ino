@@ -76,19 +76,54 @@ void setPixel(int x, int y, int color) {
 
 
 //====================================================
-// Draws a horizotal line at column Y
+// Draws a horizotal line at row Y
 // color = BLACK   all pixels set to black
 // color = YELLOW  all pixels set to yellow
-//====================================================
+//===================================================
 void hLine(int y, int color) {
   int i;
-//  for (i=0; i<X_SIZE; i++) {
-  for (i=0; i<168; i++) {
+
+  for (i=0; i<X_SIZE; i++) {
      setFrameBuffer(i, y, color);
      pixel(i,y,color);
      //delay(200);
   }
 }
+
+//====================================================
+// Draws a vertical line at column X
+// color = BLACK   all pixels set to black
+// color = YELLOW  all pixels set to yellow
+//====================================================
+void vLine(int x, int color) {
+  int i;
+
+  for (i=0; i<Y_PIXELS; i++) {
+     setFrameBuffer(x, i, color);
+     pixel(x,i,color);
+     //delay(200);
+  }
+}
+
+
+//====================================================
+// This funtion flips the pixels in one range 100 time
+// in order to get rid of remanence effects or other
+// reasons for stuck pixels.
+// x1 = start column
+// x2 = stop column
+//====================================================
+void crossTrainer(int x1, int x2) {
+  int i,j;
+
+  for (i=x1; i<=x2; i++) {
+    for (j=0; j<10; j++) {
+      vLine(i,0);  // Yellow line
+      vLine(i,1);  // Black line
+    }
+  }
+}
+
 
 
 //============================================
