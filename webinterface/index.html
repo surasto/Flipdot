@@ -4,26 +4,69 @@
 <script language="javascript" type="text/javascript">
 function schreibe(form) {
    var request = new XMLHttpRequest();
+   var schrift = "S";
+   var Farbe ="Y";
 
-   request.open("GET","writeArduino.php/?flipCommand="+form.flipText.value,false);
+	if (form.Farbe[0].checked) Farbe="Y";
+	if (form.Farbe[1].checked) Farbe="B";
+
+   if (form.schrift[0].checked) schrift="L";
+   if (form.schrift[1].checked) schrift="M";
+   if (form.schrift[2].checked) schrift="S";
+
+   request.open("GET","writeArduino.php/?flipCommand=P,"+Farbe+",6,6,"+schrift+","+form.flipText1.value+"\\",false);
    request.send();
-//   window.alert("Gesendet: "+form.flipText.value);
 }
+
+function loesche(form) {
+
+	if (form.Farbe[0].checked) Farbe="Y";
+        if (form.Farbe[1].checked) Farbe="B";
+
+
+   var request = new XMLHttpRequest();
+
+   request.open("GET","writeArduino.php/?flipCommand=C,"+Farbe+"\\",false);
+   request.send();}
+
 </script> 
 
 </head>
 <body>
 
-<h1>Flipdot-Controller</h1>
+<h1>C-HACK  Flipdot</h1>
+
 
 <form name="Testformular" action="">
-    <label>Anzeigetext </label> <input type "text" id="flipText" name="flipText" value=""> 
-   
-    <button onclick="schreibe(this.form)" >schreiben</button>
-
 <p>
-    Es wird eine XMLHttpRequest geschickt der das php Program writeArduino dem Raspi aufruft.
-    Das php Programm schreibt dann auf /dev/ttyACM0 zum Arduino.
+	<input type="Radio" name="Farbe" value="G"> Gelb
+	<input type="Radio" name="Farbe" value="S"> Schwarz	
+<p>
+      <input type="Radio" name="schrift" value="S">  klein
+      <input type="Radio" name="schrift" value="M"> mittel
+      <input type="Radio" name="schrift" value="L"> gro&szlig
+<p>
+<hl>Zeile 1 </hl>
+</p>     
+</p> 
+      <label>Anzeigetext </label> <input type "text" id="flipText1" name="flipText1" value="">
+<p>
+<hl>_______________________________ </hl>
+<input name="" value="v" type="Checkbox">
+
+</p>
+<p>
+<hl>Zeile 2 </hl>
+<p>
+ <label>Anzeigetext </label> <input type "text" id="flipText2" name="flipText2" value="">
+ </p>
+
+      <button onclick="schreibe(this.form)" >schreiben</button>
+</p>
+ 
+<p>
+   <button onClick="loesche(this.form)" >L&oumlsche</button>
+</p>
 </p>
 </form>
 </body>
