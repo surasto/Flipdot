@@ -41,12 +41,13 @@
 int i,j;
 int inByte;
 String commandLine;
+boolean umlaut;
 
 void setup() {
   
   Serial.begin(9600);
   flipdotSetup();
-
+  umlaut = false;
 }
 
 void loop() {
@@ -63,12 +64,30 @@ void loop() {
   
   if (Serial.available() > 0) {
     c = Serial.read();
-    if (commandLine.length()<100) {
-      commandLine += c;
-    }
-    else {
-      commandLine = "";
-      Serial.print("?");
+    Serial.println((int)c);
+    if (c==195) umlaut = true; 
+    else { 
+      if (umlaut) {
+         switch (c) {
+            case 164: c=132; break;   // ä
+            case 182: c=148; break;   // ö
+            case 188: c=129; break;   // ü
+            case 132: c=142; break;   // Ä
+            case 150: c=153; break;   // Ö
+            case 156: c=154; break;   // Ü
+            case 159: c=225; break;   // ß
+            default: break;
+         }
+      }
+      umlaut = false;
+     
+      if (commandLine.length()<100) {
+        commandLine += c;
+      }
+      else {
+        commandLine = "";
+        Serial.print("?");
+      }
     }
 
     // ==== If command string is complete... =======

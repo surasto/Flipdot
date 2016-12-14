@@ -1,4 +1,16 @@
 <html>
+<style>
+
+body {
+  font-family:courier;
+}
+
+.meinStyle_gelb {
+  color:yellow;
+}
+
+</style>
+
 <head>
 
 <script language="javascript" type="text/javascript">
@@ -10,11 +22,20 @@ function schreibe(form) {
 	if (form.Farbe[0].checked) Farbe="Y";
 	if (form.Farbe[1].checked) Farbe="B";
 
-   if (form.schrift[0].checked) schrift="L";
+   if (form.schrift[0].checked) schrift="S";
    if (form.schrift[1].checked) schrift="M";
-   if (form.schrift[2].checked) schrift="S";
+   if (form.schrift[2].checked) schrift="L";
 
-   request.open("GET","writeArduino.php/?flipCommand=P,"+Farbe+",6,6,"+schrift+","+form.flipText1.value+"\\",false);
+   if (form.Linie.checked) {
+ 	request.open("GET","writeArduino.php/?flipCommand=H,"+Farbe+",0,12,\\",false);
+        request.send();	
+	request.open("GET","writeArduino.php/?flipCommand=H,"+Farbe+",0,13,\\",false);
+	request.send();
+   }
+
+   request.open("GET","writeArduino.php/?flipCommand=P,"+Farbe+",2,2,"+schrift+","+form.flipText1.value+"\\",false);
+   request.send();
+   request.open("GET","writeArduino.php/?flipCommand=P,"+Farbe+",2,15,"+schrift+","+form.flipText2.value+"\\",false);
    request.send();
 }
 
@@ -34,12 +55,12 @@ function loesche(form) {
 </head>
 <body>
 
-<h1>C-HACK  Flipdot</h1>
+<img src="FlipdotTitle.png" />
 
 
 <form name="Testformular" action="">
 <p>
-	<input type="Radio" name="Farbe" value="G"> Gelb
+	<input type="Radio" name="Farbe" value="G"> <b class="meinStyle_gelb">Gelb</b>
 	<input type="Radio" name="Farbe" value="S"> Schwarz	
 <p>
       <input type="Radio" name="schrift" value="S">  klein
@@ -52,7 +73,7 @@ function loesche(form) {
       <label>Anzeigetext </label> <input type "text" id="flipText1" name="flipText1" value="">
 <p>
 <hl>_______________________________ </hl>
-<input name="" value="v" type="Checkbox">
+<input name="Linie" value="J" type="Checkbox">
 
 </p>
 <p>

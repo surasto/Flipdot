@@ -223,7 +223,11 @@ int main(int argc, char *argv[]) {
     	
     clearFrameBuffer(OFF);
     untouchBuffer();
-    i = printString(2,1,ON,SMALL,"Test mit Space ! & $");
+    j=0;
+    for (i=140; i<160; i++) {
+		printChar8x8(j,1,ON,i);
+		j+=9;
+	}
     i = printString(2,15,ON,LARGE,"Noch ein Test \x81");
  //   i = printString(2,18,ON,"Passt das noch ?");
 //    i=printChar(10,2,ON,'A');
