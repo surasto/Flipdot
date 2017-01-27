@@ -137,7 +137,8 @@ void crossTrainer(int x1, int x2) {
 int printString(int xOffs, int yOffs, int color, int size, String s) {
   int i,x,y;
   char c;
-  
+  unsigned char uc;
+    
   i=0;
   x=xOffs;
   y=yOffs;
@@ -145,11 +146,32 @@ int printString(int xOffs, int yOffs, int color, int size, String s) {
   if (size==SMALL) x=xOffs-2;   // Somehow I need to shift the text to the left
 
   while ((i<s.length()) && (i<100)) {
+    c = s.charAt(i);
+    //Serial.print((int) c); 
+    
+    if (c == -61) {
+      if (i < s.length()-1) i++;
+      c = s.charAt(i); 
+      switch(c) {
+        case -92:  uc=132; break;   // ä
+        case -74:  uc=148; break;   // ö
+        case -68:  uc=129; break;   // ü
+        case -124: uc=142; break;   // Ä
+        case -106: uc=153; break;   // Ö
+        case -100: uc=154; break;   // Ü
+        case -97:  uc=225; break;   // ß
+        default: break;
+      }
+    } else uc=c;
+
+    //Serial.print(" --> ");
+    //Serial.println(uc); // debug only
+    
     switch(size) {
-      case SMALL: x = printChar6x8(x, y, color, s.charAt(i)); break;
-      case MEDIUM: x = printChar8x8(x, y, color, s.charAt(i)); break;
-      case LARGE: x = printChar8x12(x, y, color, s.charAt(i)); break;
-      default: x = printChar6x8(x, y, color, s[i]);
+      case SMALL: x = printChar6x8(x, y, color, uc); break;
+      case MEDIUM: x = printChar8x8(x, y, color, uc); break;
+      case LARGE: x = printChar8x12(x, y, color, uc); break;
+      default: x = printChar6x8(x, y, color, uc);
     }
     //Serial.print(s.charAt(i));  
     i++;
